@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - GPUFlow</title>
+    <meta name="description" content="Learn about GPUFlow's mission to democratize access to high-performance computing for AI and ML workloads.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-black: #0A0A0A;
+            --electric-blue: #00D4FF;
+            --neon-cyan: #00FFFF;
+            --steel-gray: #2A2A2A;
+            --pure-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-black);
+            color: var(--pure-white);
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        /* Navigation */
+        .nav-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.8);
+        }
+        
+        /* Buttons */
+        .cta-button {
+            background: linear-gradient(45deg, var(--electric-blue), var(--neon-cyan));
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Cards */
+        .info-card {
+            background: linear-gradient(135deg, var(--steel-gray), rgba(42, 42, 42, 0.8));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            border-color: var(--electric-blue);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .team-card {
+            background: linear-gradient(135deg, var(--steel-gray), rgba(42, 42, 42, 0.8));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--electric-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.5rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background: linear-gradient(to bottom, var(--electric-blue), transparent);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        /* Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        /* Stats */
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--electric-blue), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 nav-blur">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="font-orbitron text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                        GPUFlow
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
+                    <a href="services.html" class="text-white hover:text-blue-400 transition-colors">Services</a>
+                    <a href="about.html" class="text-blue-400">About</a>
+                    <a href="contact.html" class="text-white hover:text-blue-400 transition-colors">Contact</a>
+                    <button class="cta-button px-6 py-2 rounded-lg text-black font-semibold">
+                        Get Quote
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-toggle text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu fixed top-16 right-0 w-64 h-screen bg-gray-900 md:hidden">
+            <div class="p-6 space-y-4">
+                <a href="index.html" class="block text-white hover:text-blue-400 transition-colors">Home</a>
+                <a href="services.html" class="block text-white hover:text-blue-400 transition-colors">Services</a>
+                <a href="about.html" class="block text-blue-400">About</a>
+                <a href="contact.html" class="block text-white hover:text-blue-400 transition-colors">Contact</a>
+                <button class="cta-button w-full px-6 py-2 rounded-lg text-black font-semibold mt-4">
+                    Get Quote
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="pt-24 pb-12 bg-gradient-to-br from-gray-900 to-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h1 class="font-orbitron text-4xl md:text-6xl font-bold mb-6">
+                    About <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">GPUFlow</span>
+                </h1>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Democratizing access to high-performance computing for AI and machine learning. 
+                    We're connecting you to the best GPU providers worldwide.
+                </p>
+            </div>
+            
+            <!-- Breadcrumb -->
+            <nav class="flex justify-center" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2">
+                    <li><a href="index.html" class="text-gray-400 hover:text-blue-400">Home</a></li>
+                    <li><span class="text-gray-400">/</span></li>
+                    <li><span class="text-blue-400">About</span></li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+    
+    <!-- Mission & Vision -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-6">
+                        Our Mission
+                    </h2>
+                    <p class="text-lg text-gray-300 mb-6">
+                        At GPUFlow, we believe that cutting-edge AI and machine learning should be accessible to everyone, 
+                        not just tech giants with deep pockets. Our mission is to democratize access to high-performance 
+                        computing by connecting businesses, researchers, and innovators with the world's best GPU providers.
+                    </p>
+                    <p class="text-lg text-gray-300 mb-8">
+                        We act as your trusted middleman, ensuring you get the best performance, pricing, and support 
+                        without the complexity of managing multiple vendor relationships. Focus on your AI models while 
+                        we handle the infrastructure.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="info-card px-6 py-4 rounded-lg">
+                            <div class="text-2xl font-bold text-blue-400 mb-2">500+</div>
+                            <div class="text-gray-400">Happy Clients</div>
+                        </div>
+                        <div class="info-card px-6 py-4 rounded-lg">
+                            <div class="text-2xl font-bold text-cyan-400 mb-2">10,000+</div>
+                            <div class="text-gray-400">GPUs Available</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="resources/team-work.jpg" alt="GPUFlow Team" class="rounded-xl shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Values -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-6">
+                    Our Values
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    The core principles that guide everything we do at GPUFlow.
+                </p>
+            </div>
+            
+            <div class="values-grid">
+                <div class="info-card p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg mb-6 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">Reliability</h3>
+                    <p class="text-gray-300">
+                        We partner only with proven GPU providers to ensure 99.9% uptime and consistent performance 
+                        for your critical AI workloads.
+                    </p>
+                </div>
+                
+                <div class="info-card p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg mb-6 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.51-1.31c-.562-.649-1.413-1.076-2.353-1.253V5z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">Affordability</h3>
+                    <p class="text-gray-300">
+                        Competitive pricing without compromising quality. We negotiate the best rates with providers 
+                        to make high-performance computing accessible to organizations of all sizes.
+                    </p>
+                </div>
+                
+                <div class="info-card p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-6 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">Scalability</h3>
+                    <p class="text-gray-300">
+                        From single GPU experiments to massive distributed training clusters, we help you scale 
+                        your computing resources as your needs evolve.
+                    </p>
+                </div>
+                
+                <div class="info-card p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg mb-6 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-4">Expert Support</h3>
+                    <p class="text-gray-300">
+                        Our team of AI and infrastructure experts provides 24/7 support to ensure your workloads 
+                        run smoothly and efficiently.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Timeline -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-6">
+                    Our Journey
+                </h2>
+                <p class="text-xl text-gray-300">
+                    From startup to leading GPU rental marketplace.
+                </p>
+            </div>
+            
+            <div class="space-y-12">
+                <div class="timeline-item">
+                    <div class="info-card p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="font-orbitron text-blue-400 font-bold text-lg mr-4">2022</span>
+                            <h3 class="text-xl font-bold">Company Founded</h3>
+                        </div>
+                        <p class="text-gray-300">
+                            GPUFlow was founded with a mission to democratize access to high-performance computing. 
+                            We started by connecting our first 10 customers with GPU providers.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="info-card p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="font-orbitron text-blue-400 font-bold text-lg mr-4">2023</span>
+                            <h3 class="text-xl font-bold">First 100 Clients</h3>
+                        </div>
+                        <p class="text-gray-300">
+                            Reached our first 100 clients including AI startups, research institutions, and enterprises. 
+                            Expanded our GPU offerings to include the latest NVIDIA H100s.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="info-card p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="font-orbitron text-blue-400 font-bold text-lg mr-4">2024</span>
+                            <h3 class="text-xl font-bold">Market Leadership</h3>
+                        </div>
+                        <p class="text-gray-300">
+                            Became a leading GPU rental marketplace with 500+ clients and 10,000+ GPUs in our network. 
+                            Introduced support for the latest Blackwell architecture GPUs.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="info-card p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="font-orbitron text-cyan-400 font-bold text-lg mr-4">2025</span>
+                            <h3 class="text-xl font-bold">Global Expansion</h3>
+                        </div>
+                        <p class="text-gray-300">
+                            Expanding globally with data centers across North America, Europe, and Asia. 
+                            Launching advanced AI optimization tools and enterprise solutions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Team Section -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-6">
+                    Leadership Team
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Meet the experts behind GPUFlow's success.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Team Member 1 -->
+                <div class="team-card p-8 rounded-xl text-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">AS</span>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-2">Alex Smith</h3>
+                    <p class="text-blue-400 mb-4">CEO & Co-Founder</p>
+                    <p class="text-gray-300 text-sm mb-4">
+                        15+ years in AI infrastructure and cloud computing. Former VP of Engineering at leading tech companies.
+                    </p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-blue-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Team Member 2 -->
+                <div class="team-card p-8 rounded-xl text-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">MJ</span>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-2">Maria Johnson</h3>
+                    <p class="text-green-400 mb-4">CTO & Co-Founder</p>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Expert in distributed systems and GPU optimization. PhD in Computer Science from MIT.
+                    </p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-green-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Team Member 3 -->
+                <div class="team-card p-8 rounded-xl text-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">DC</span>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold mb-2">David Chen</h3>
+                    <p class="text-purple-400 mb-4">VP of Engineering</p>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Led engineering teams at Fortune 500 companies. Specialist in AI infrastructure and cloud optimization.
+                    </p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-purple-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-purple-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-6">
+                    Our Impact
+                </h2>
+                <p class="text-xl text-gray-300">
+                    Numbers that speak to our success and growth.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                <div class="info-card p-8 rounded-xl">
+                    <div class="stat-number mb-4">500+</div>
+                    <h3 class="text-xl font-bold mb-2">Clients Served</h3>
+                    <p class="text-gray-400">From startups to Fortune 500 companies</p>
+                </div>
+                
+                <div class="info-card p-8 rounded-xl">
+                    <div class="stat-number mb-4">10,000+</div>
+                    <h3 class="text-xl font-bold mb-2">GPUs Available</h3>
+                    <p class="text-gray-400">Latest models from NVIDIA and AMD</p>
+                </div>
+                
+                <div class="info-card p-8 rounded-xl">
+                    <div class="stat-number mb-4">99.9%</div>
+                    <h3 class="text-xl font-bold mb-2">Uptime SLA</h3>
+                    <p class="text-gray-400">Reliable performance you can count on</p>
+                </div>
+                
+                <div class="info-card p-8 rounded-xl">
+                    <div class="stat-number mb-4">24/7</div>
+                    <h3 class="text-xl font-bold mb-2">Support</h3>
+                    <p class="text-gray-400">Expert help whenever you need it</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="py-16 scroll-reveal">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-6">
+                Ready to Accelerate Your AI?
+            </h2>
+            <p class="text-xl text-gray-300 mb-8">
+                Join hundreds of companies trusting GPUFlow for their high-performance computing needs.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="cta-button px-8 py-4 rounded-lg text-black font-semibold text-lg">
+                    Get Started Today
+                </button>
+                <a href="contact.html" class="border-2 border-blue-400 text-blue-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-400 hover:text-black transition-all">
+                    Schedule Consultation
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="font-orbitron text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-4">
+                    GPUFlow
+                </div>
+                <p class="text-gray-400 mb-6">
+                    High-performance GPU rentals for AI & ML workloads
+                </p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v15.403C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.017.001z"/>
+                        </svg>
+                    </a>
+                </div>
+                <p class="text-gray-500 text-sm">
+                    © 2024 GPUFlow. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- About Page JavaScript -->
+    <script>
+        // About page specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize scroll animations
+            initScrollAnimations();
+        });
+        
+        function initScrollAnimations() {
+            const animatedElements = document.querySelectorAll('.scroll-reveal');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animatedElements.forEach(el => observer.observe(el));
+        }
+    </script>
+    
+    <!-- Main JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>

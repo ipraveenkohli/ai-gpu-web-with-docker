@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPUFlow - High-Performance GPU Rentals for AI & ML</title>
+    <meta name="description" content="Rent high-performance GPUs for AI and ML workloads. Affordable, scalable GPU rentals for startups, researchers, and enterprises.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link href="https://unpkg.com/splitting@1.0.6/dist/splitting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-black: #0A0A0A;
+            --electric-blue: #00D4FF;
+            --neon-cyan: #00FFFF;
+            --steel-gray: #2A2A2A;
+            --pure-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-black);
+            color: var(--pure-white);
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        /* Background Effects */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Navigation */
+        .nav-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.8);
+        }
+        
+        /* Hero Section */
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%);
+        }
+        
+        .typewriter-text {
+            opacity: 0;
+            background: linear-gradient(45deg, var(--electric-blue), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Buttons */
+        .cta-button {
+            background: linear-gradient(45deg, var(--electric-blue), var(--neon-cyan));
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        /* GPU Cards */
+        .gpu-card {
+            background: linear-gradient(135deg, var(--steel-gray), rgba(42, 42, 42, 0.8));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .gpu-card:hover {
+            border-color: var(--electric-blue);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.2);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--steel-gray), var(--primary-black));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Form Styles */
+        .form-input {
+            background: rgba(42, 42, 42, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: var(--pure-white);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+            outline: none;
+        }
+        
+        .form-input.error {
+            border-color: #ff4444;
+        }
+        
+        .field-error {
+            color: #ff4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-cyan));
+            transition: width 0.3s ease;
+        }
+        
+        /* Step Indicators */
+        .step-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.completed {
+            background: var(--electric-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+        
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .success-content {
+            background: linear-gradient(135deg, var(--steel-gray), var(--primary-black));
+            padding: 3rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        /* Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        /* Trust Badges */
+        .trust-badge {
+            background: rgba(42, 42, 42, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particle-canvas" class="particle-bg"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 nav-blur">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="font-orbitron text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                        GPUFlow
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-white hover:text-blue-400 transition-colors">Home</a>
+                    <a href="services.html" class="text-white hover:text-blue-400 transition-colors">Services</a>
+                    <a href="about.html" class="text-white hover:text-blue-400 transition-colors">About</a>
+                    <a href="contact.html" class="text-white hover:text-blue-400 transition-colors">Contact</a>
+                    <button class="cta-button px-6 py-2 rounded-lg text-black font-semibold">
+                        Get Quote
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-toggle text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu fixed top-16 right-0 w-64 h-screen bg-gray-900 md:hidden">
+            <div class="p-6 space-y-4">
+                <a href="#home" class="block text-white hover:text-blue-400 transition-colors">Home</a>
+                <a href="services.html" class="block text-white hover:text-blue-400 transition-colors">Services</a>
+                <a href="about.html" class="block text-white hover:text-blue-400 transition-colors">About</a>
+                <a href="contact.html" class="block text-white hover:text-blue-400 transition-colors">Contact</a>
+                <button class="cta-button w-full px-6 py-2 rounded-lg text-black font-semibold mt-4">
+                    Get Quote
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center hero-gradient relative pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <!-- Hero Title -->
+                <h1 class="hero-title font-orbitron text-5xl md:text-7xl font-bold mb-6">
+                    <span class="typewriter-text">Rent High-Performance GPUs</span>
+                </h1>
+                
+                <!-- Hero Subtitle -->
+                <p class="hero-subtitle text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto">
+                    Affordable, scalable GPU rentals for AI & ML workloads. 
+                    Empowering startups, researchers, and enterprises with cutting-edge computing power.
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                    <button class="cta-button px-8 py-4 rounded-lg text-black font-semibold text-lg">
+                        Get Your Quote
+                    </button>
+                    <a href="services.html" class="border-2 border-blue-400 text-blue-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-400 hover:text-black transition-all">
+                        View GPU Options
+                    </a>
+                </div>
+                
+                <!-- Trust Indicators -->
+                <div class="flex flex-wrap justify-center gap-6 mb-12">
+                    <div class="trust-badge px-4 py-2 rounded-lg flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>SSL Secure</span>
+                    </div>
+                    <div class="trust-badge px-4 py-2 rounded-lg flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Verified Partners</span>
+                    </div>
+                    <div class="trust-badge px-4 py-2 rounded-lg flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- GPU Showcase -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-6">
+                    Latest GPU Technology
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Access the most powerful GPUs for your AI and machine learning projects. 
+                    From training large language models to running inference at scale.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- GPU Card 1 -->
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold mb-2">NVIDIA B200</h3>
+                        <p class="text-gray-400 text-sm mb-4">Latest Blackwell Architecture</p>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Memory:</span>
+                            <span class="text-white font-semibold">192GB HBM3e</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Performance:</span>
+                            <span class="text-white font-semibold">320 TFLOPS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Price:</span>
+                            <span class="text-blue-400 font-semibold">$6-10/hr</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full cta-button py-3 rounded-lg text-black font-semibold">
+                        Request Quote
+                    </button>
+                </div>
+                
+                <!-- GPU Card 2 -->
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold mb-2">NVIDIA H200</h3>
+                        <p class="text-gray-400 text-sm mb-4">Hopper Architecture</p>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Memory:</span>
+                            <span class="text-white font-semibold">141GB HBM3e</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Performance:</span>
+                            <span class="text-white font-semibold">67 TFLOPS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Price:</span>
+                            <span class="text-blue-400 font-semibold">$4-7/hr</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full cta-button py-3 rounded-lg text-black font-semibold">
+                        Request Quote
+                    </button>
+                </div>
+                
+                <!-- GPU Card 3 -->
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold mb-2">NVIDIA H100</h3>
+                        <p class="text-gray-400 text-sm mb-4">Hopper Architecture</p>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Memory:</span>
+                            <span class="text-white font-semibold">80GB HBM3</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Performance:</span>
+                            <span class="text-white font-semibold">67 TFLOPS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Price:</span>
+                            <span class="text-blue-400 font-semibold">$3-6/hr</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full cta-button py-3 rounded-lg text-black font-semibold">
+                        Request Quote
+                    </button>
+                </div>
+                
+                <!-- GPU Card 4 -->
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="font-orbitron text-xl font-bold mb-2">NVIDIA A100</h3>
+                        <p class="text-gray-400 text-sm mb-4">Ampere Architecture</p>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Memory:</span>
+                            <span class="text-white font-semibold">80GB HBM2e</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Performance:</span>
+                            <span class="text-white font-semibold">19.5 TFLOPS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Price:</span>
+                            <span class="text-blue-400 font-semibold">$2-4/hr</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full cta-button py-3 rounded-lg text-black font-semibold">
+                        Request Quote
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="services.html" class="inline-block border-2 border-blue-400 text-blue-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-400 hover:text-black transition-all">
+                    Compare All GPUs
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-4xl md:text-5xl font-orbitron font-bold text-blue-400 mb-2">
+                        <span class="animate-number">10,000+</span>
+                    </div>
+                    <p class="text-gray-400">GPUs Available</p>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-orbitron font-bold text-cyan-400 mb-2">
+                        <span class="animate-number">500+</span>
+                    </div>
+                    <p class="text-gray-400">Happy Clients</p>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-orbitron font-bold text-blue-400 mb-2">
+                        <span class="animate-number">99.9%</span>
+                    </div>
+                    <p class="text-gray-400">Uptime SLA</p>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-orbitron font-bold text-cyan-400 mb-2">
+                        <span class="animate-number">24/7</span>
+                    </div>
+                    <p class="text-gray-400">Support Available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-6">
+                    What Our Clients Say
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Trusted by leading AI companies and research institutions worldwide.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">JD</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">John Davis</h4>
+                            <p class="text-gray-400 text-sm">CTO, AI Startup</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">
+                        "GPUFlow provided us with the exact GPU power we needed for training our LLM. 
+                        The pricing was competitive and the support was exceptional."
+                    </p>
+                </div>
+                
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">SM</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Sarah Miller</h4>
+                            <p class="text-gray-400 text-sm">Research Director</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">
+                        "Access to the latest B200 GPUs accelerated our research significantly. 
+                        The flexibility to scale up and down was crucial for our project."
+                    </p>
+                </div>
+                
+                <div class="gpu-card p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">MC</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Mike Chen</h4>
+                            <p class="text-gray-400 text-sm">ML Engineer</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">
+                        "The GPU comparison tool helped us choose the right hardware for our inference workloads. 
+                        Great cost optimization and performance."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="font-orbitron text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-4">
+                    GPUFlow
+                </div>
+                <p class="text-gray-400 mb-6">
+                    High-performance GPU rentals for AI & ML workloads
+                </p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.017.001z"/>
+                        </svg>
+                    </a>
+                </div>
+                <p class="text-gray-500 text-sm">
+                    © 2024 GPUFlow. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Lead Form Modal -->
+    <div id="lead-form-modal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50" style="opacity: 0; transition: opacity 0.3s ease;">
+        <div class="modal-content rounded-xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-orbitron text-2xl font-bold">Get Your GPU Quote</h3>
+                    <button class="modal-close text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-700 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 25%;"></div>
+                </div>
+                
+                <!-- Step Indicators -->
+                <div class="flex justify-center space-x-4">
+                    <div class="step-indicator completed"></div>
+                    <div class="step-indicator"></div>
+                    <div class="step-indicator"></div>
+                    <div class="step-indicator"></div>
+                </div>
+            </div>
+            
+            <!-- Step 1: Basic Information -->
+            <div class="form-step" data-step="1" style="display: block;">
+                <h4 class="text-xl font-semibold mb-6">Basic Information</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Full Name *</label>
+                        <input type="text" name="name" required class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email Address *</label>
+                        <input type="email" name="email" required class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter your email">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Company Name</label>
+                        <input type="text" name="company" class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter your company name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Phone Number</label>
+                        <input type="tel" name="phone" class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter your phone number">
+                    </div>
+                </div>
+                <div class="flex justify-end mt-8">
+                    <button class="next-step cta-button px-8 py-3 rounded-lg text-black font-semibold">
+                        Next Step
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Project Details -->
+            <div class="form-step" data-step="2" style="display: none;">
+                <h4 class="text-xl font-semibold mb-6">Project Details</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Use Case *</label>
+                        <select name="use_case" required class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="">Select your use case</option>
+                            <option value="ai_training">AI/ML Training</option>
+                            <option value="inference">Inference/Serving</option>
+                            <option value="research">Research</option>
+                            <option value="rendering">3D Rendering</option>
+                            <option value="crypto">Cryptocurrency</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Project Timeline</label>
+                        <select name="timeline" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="">Select timeline</option>
+                            <option value="immediate">Immediate (1-7 days)</option>
+                            <option value="short">Short-term (1-4 weeks)</option>
+                            <option value="medium">Medium-term (1-3 months)</option>
+                            <option value="long">Long-term (3+ months)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Budget Range</label>
+                        <select name="budget" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="">Select budget range</option>
+                            <option value="under_5k">Under $5,000/month</option>
+                            <option value="5k_15k">$5,000 - $15,000/month</option>
+                            <option value="15k_50k">$15,000 - $50,000/month</option>
+                            <option value="over_50k">Over $50,000/month</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button class="prev-step border border-gray-600 px-8 py-3 rounded-lg text-gray-300 font-semibold hover:bg-gray-700">
+                        Previous
+                    </button>
+                    <button class="next-step cta-button px-8 py-3 rounded-lg text-black font-semibold">
+                        Next Step
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: GPU Preferences -->
+            <div class="form-step" data-step="3" style="display: none;">
+                <h4 class="text-xl font-semibold mb-6">GPU Preferences</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Preferred GPU Model</label>
+                        <select name="gpu_model" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="">Select GPU model</option>
+                            <option value="b200">NVIDIA B200</option>
+                            <option value="h200">NVIDIA H200</option>
+                            <option value="h100">NVIDIA H100</option>
+                            <option value="a100">NVIDIA A100</option>
+                            <option value="rtx4090">RTX 4090</option>
+                            <option value="any">Any available</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Number of GPUs</label>
+                        <input type="number" name="gpu_count" class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter number of GPUs" min="1" max="1000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Rental Duration</label>
+                        <select name="duration" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="">Select duration</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button class="prev-step border border-gray-600 px-8 py-3 rounded-lg text-gray-300 font-semibold hover:bg-gray-700">
+                        Previous
+                    </button>
+                    <button class="next-step cta-button px-8 py-3 rounded-lg text-black font-semibold">
+                        Next Step
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Contact Preferences -->
+            <div class="form-step" data-step="4" style="display: none;">
+                <h4 class="text-xl font-semibold mb-6">Contact Preferences</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Preferred Contact Method</label>
+                        <select name="contact_method" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="both">Both</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Best Time to Contact</label>
+                        <select name="contact_time" class="form-input w-full px-4 py-3 rounded-lg">
+                            <option value="anytime">Anytime</option>
+                            <option value="morning">Morning (9AM-12PM)</option>
+                            <option value="afternoon">Afternoon (12PM-5PM)</option>
+                            <option value="evening">Evening (5PM-8PM)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Additional Notes</label>
+                        <textarea name="notes" rows="4" class="form-input w-full px-4 py-3 rounded-lg" placeholder="Tell us more about your specific requirements..."></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button class="prev-step border border-gray-600 px-8 py-3 rounded-lg text-gray-300 font-semibold hover:bg-gray-700">
+                        Previous
+                    </button>
+                    <button class="submit-form cta-button px-8 py-3 rounded-lg text-black font-semibold">
+                        Submit Quote Request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
